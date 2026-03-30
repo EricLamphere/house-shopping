@@ -1,6 +1,30 @@
+from enum import Enum
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+
+
+class HouseStatus(str, Enum):
+    IN_THE_RUNNING = "in_the_running"
+    LOVE = "love"
+    NO = "no"
+    OFFER_SUBMITTED = "offer_submitted"
+
+
+STATUS_LABELS: dict[HouseStatus, str] = {
+    HouseStatus.IN_THE_RUNNING: "In the Running",
+    HouseStatus.LOVE: "Love",
+    HouseStatus.NO: "No",
+    HouseStatus.OFFER_SUBMITTED: "Offer Submitted",
+}
+
+STATUS_COLORS: dict[HouseStatus, str] = {
+    HouseStatus.IN_THE_RUNNING: "blue",
+    HouseStatus.LOVE: "pink",
+    HouseStatus.NO: "red",
+    HouseStatus.OFFER_SUBMITTED: "green",
+}
 
 
 class ZillowData(BaseModel):
@@ -26,5 +50,6 @@ class House(BaseModel):
     monthly_internet: Optional[int] = None
     is_favorite: bool = False
     favorite_sort_order: Optional[int] = None
+    status: Optional[HouseStatus] = None
     added_at: datetime
     updated_at: datetime
