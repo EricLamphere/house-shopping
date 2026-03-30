@@ -13,7 +13,7 @@ House Shopping is a local-first web application built on FastAPI (Python) with a
 | Dynamic UI | HTMX v2 |
 | Styling | TailwindCSS (CDN) |
 | Drag & Drop | SortableJS (CDN) |
-| Storage | JSON (houses) + YAML (assets) |
+| Storage | JSON (houses, links) + YAML (assets) |
 | Infrastructure | Docker Compose + Taskfile |
 
 ## Project Structure
@@ -32,6 +32,7 @@ house-shopping/
 │   └── static/               # CSS and JS
 ├── memory/                   # Volume-mounted runtime data
 │   ├── houses.json           # House listings (gitignored)
+│   ├── links.json            # Saved links (gitignored)
 │   └── assets.yml            # Financial profile (gitignored)
 ├── tests/
 │   ├── unit/
@@ -55,6 +56,7 @@ Each router in `app/routes/` handles a domain:
 | `houses.py` | `/houses` | House CRUD, favorites, reordering |
 | `cost_estimator.py` | `/cost-estimator` | Cost calculator form and results |
 | `assets.py` | `/assets` | User financial profile |
+| `links.py` | `/links` | Saved links CRUD and reordering |
 
 Routes return either full HTML pages or partial HTML fragments for HTMX swaps.
 
@@ -64,6 +66,7 @@ Pydantic models in `app/models/` define the data schema and handle validation:
 
 - **`House`** — a saved listing, contains nested `ZillowData` plus user-entered costs, notes, and favorites metadata
 - **`ZillowData`** — listing specifics: address, price, beds, baths, sqft, image URL
+- **`Link`** — a saved link with display text, URL, and sort order
 - **`UserAssets`** — user's financial profile: salary, savings, loan preferences
 - **`CostEstimateInput`** / **`CostEstimateResult`** — input and output for cost calculations
 
@@ -80,6 +83,7 @@ Pure functions with no side effects, in `app/services/`:
 File-based persistence in `app/storage/`:
 
 - **`HouseStore`** — reads/writes `houses.json`; thread-safe with a mutex lock; atomic writes via temp file + rename
+- **`LinkStore`** — reads/writes `links.json`; same thread-safety and atomic write pattern as `HouseStore`
 - **`AssetsStore`** — reads/writes `assets.yml`; YAML format for human editability
 
 All updates use Pydantic's `model_copy(update=...)` — objects are never mutated in place.
@@ -111,6 +115,19 @@ All updates use Pydantic's `model_copy(update=...)` — objects are never mutate
 4. User fills remaining fields and clicks Calculate
 5. HTMX POSTs to `/cost-estimator/calculate`; response is a partial HTML fragment
 6. HTMX swaps the results panel — no full page reload
+
+### Links
+
+1. User visits `/links`; server renders the full page with the current list
+2. User types display text + URL, submits the add form
+3. HTMX POSTs to `/links`; backend appends to `links.json` with `sort_order` = current max + 1
+4. Response is the full `link_list.html` partial; HTMX swaps the `<ul>` with `outerHTML`
+5. SortableJS re-initialises on `htmx:afterSettle`
+6. Edit: clicking the pencil fires `GET /links/{id}/edit`; the row swaps to an inline form
+7. Save: form PATCHes `/links/{id}`; response is the restored read-only row
+8. Cancel: `GET /links/{id}/row` returns the read-only row without saving
+9. Drag reorder: SortableJS `onEnd` sends `PUT /links/order` with the new ordered ID array
+10. Delete: HTMX DELETE replaces the entire list with the updated partial
 
 ### Favorites & Reordering
 

@@ -1,0 +1,32 @@
+<li class="bg-white border border-blue-300 rounded-lg px-4 py-3 shadow-sm"
+    data-id="{{ link.id }}" id="link-row-{{ link.id }}">
+    <form
+        hx-patch="/links/{{ link.id }}"
+        hx-target="#link-row-{{ link.id }}"
+        hx-swap="outerHTML"
+        class="flex flex-col sm:flex-row gap-3 items-end">
+        <div class="flex-1">
+            <label class="block text-xs font-medium text-gray-600 mb-1">Display text</label>
+            <input name="text" type="text" required value="{{ link.text }}"
+                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+        <div class="flex-1">
+            <label class="block text-xs font-medium text-gray-600 mb-1">URL</label>
+            <input name="url" type="url" required value="{{ link.url }}"
+                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+        <div class="flex gap-2 shrink-0">
+            <button type="submit"
+                    class="px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                Save
+            </button>
+            <button type="button"
+                    hx-get="/links/{{ link.id }}/row"
+                    hx-target="#link-row-{{ link.id }}"
+                    hx-swap="outerHTML"
+                    class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors">
+                Cancel
+            </button>
+        </div>
+    </form>
+</li>

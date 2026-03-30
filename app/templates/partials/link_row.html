@@ -1,0 +1,34 @@
+<li class="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 shadow-sm group"
+    data-id="{{ link.id }}" id="link-row-{{ link.id }}">
+    <span class="cursor-grab text-gray-300 hover:text-gray-500 drag-handle select-none" title="Drag to reorder">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M7 2a1 1 0 000 2h6a1 1 0 000-2H7zM7 8a1 1 0 000 2h6a1 1 0 000-2H7zM7 14a1 1 0 000 2h6a1 1 0 000-2H7z"/>
+        </svg>
+    </span>
+    <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+       class="flex-1 text-blue-600 hover:text-blue-800 hover:underline font-medium truncate">
+        {{ link.text }}
+    </a>
+    <span class="text-gray-400 text-xs truncate max-w-xs hidden sm:block">{{ link.url }}</span>
+    <button
+        hx-get="/links/{{ link.id }}/edit"
+        hx-target="#link-row-{{ link.id }}"
+        hx-swap="outerHTML"
+        class="text-gray-300 hover:text-blue-500 transition-colors shrink-0"
+        title="Edit link">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+    </button>
+    <button
+        hx-delete="/links/{{ link.id }}"
+        hx-target="#link-list"
+        hx-swap="outerHTML"
+        class="text-gray-300 hover:text-red-500 transition-colors shrink-0"
+        title="Delete link">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+</li>

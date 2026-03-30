@@ -24,6 +24,7 @@ ENV/
 # App data (runtime-generated, contains personal info)
 memory/houses.json
 memory/assets.yml
+memory/links.json
 
 # Docker
 .docker/

@@ -1,0 +1,7 @@
+<ul id="link-list" class="space-y-2">
+    {% for link in links %}
+        {% include "partials/link_row.html" %}
+    {% else %}
+    <li class="text-gray-400 text-sm py-6 text-center">No links yet. Add one above.</li>
+    {% endfor %}
+</ul>
