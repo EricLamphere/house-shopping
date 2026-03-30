@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Cost Estimator - House Shopping{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Cost Estimator</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <form id="cost-form"
+                  hx-post="/cost-estimator/calculate"
+                  hx-target="#cost-results"
+                  hx-swap="innerHTML"
+                  hx-indicator="#calc-spinner">
+
+                {% if house %}
+                <input type="hidden" name="house_id" value="{{ house.id }}">
+                {% endif %}
+
+                <!-- Property Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Property</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Purchase Price ($)</label>
+                            <input type="number" name="purchase_price" value="{{ house.zillow_data.price if house and house.zillow_data.price else '' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Annual Property Tax ($)</label>
+                            <input type="number" name="annual_property_tax" value=""
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Annual Insurance ($)</label>
+                            <input type="number" name="annual_insurance" value=""
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Monthly HOA ($)</label>
+                            <input type="number" name="monthly_hoa" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loan Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Loan</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Down Payment (%)</label>
+                            <input type="number" name="down_payment_percent" step="0.1"
+                                   value="{{ assets.down_payment_percent }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Interest Rate (%)</label>
+                            <input type="number" name="interest_rate" step="0.01"
+                                   value="{{ assets.interest_rate }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Loan Term (years)</label>
+                            <input type="number" name="loan_term_years"
+                                   value="{{ assets.loan_term_years }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utilities Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Monthly Utilities</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Heat ($)</label>
+                            <input type="number" name="monthly_heat" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Water ($)</label>
+                            <input type="number" name="monthly_water" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Electric ($)</label>
+                            <input type="number" name="monthly_electric" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Internet ($)</label>
+                            <input type="number" name="monthly_internet" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Your Finances Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Your Finances</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Annual Salary ($)</label>
+                            <input type="number" name="annual_salary" value="{{ assets.annual_salary }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Savings ($)</label>
+                            <input type="number" name="savings" value="{{ assets.savings }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Monthly Loan Payments ($)</label>
+                            <input type="number" name="monthly_loan_payments" value="{{ assets.monthly_loan_payments }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Other Monthly Expenses ($)</label>
+                            <input type="number" name="monthly_other_expenses" value="{{ assets.monthly_other_expenses }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button type="submit"
+                            class="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        Calculate
+                    </button>
+                    <div id="calc-spinner" class="htmx-indicator">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="lg:col-span-1">
+            <div id="cost-results">
+                {% if result %}
+                    {% include "partials/cost_result.html" %}
+                {% else %}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center text-gray-400">
+                    <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <p class="text-sm">Fill in the form and click Calculate to see your estimated costs</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

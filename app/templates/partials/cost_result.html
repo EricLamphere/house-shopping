@@ -1,0 +1,86 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <!-- Total Monthly -->
+    <div class="bg-blue-600 text-white p-5 text-center">
+        <p class="text-sm font-medium opacity-90">Total Monthly Payment</p>
+        <p class="text-3xl font-bold mt-1">${{ "{:,.0f}".format(result.total_monthly) }}</p>
+    </div>
+
+    <!-- Monthly Breakdown -->
+    <div class="p-5 space-y-3">
+        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Monthly Breakdown</h4>
+
+        <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Principal & Interest</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.principal_and_interest) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Property Tax</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.property_tax) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Insurance</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.insurance) }}</span>
+            </div>
+            {% if result.pmi > 0 %}
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">PMI</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.pmi) }}</span>
+            </div>
+            {% endif %}
+            {% if result.hoa > 0 %}
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">HOA</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.hoa) }}</span>
+            </div>
+            {% endif %}
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Utilities</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.utilities) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upfront Costs -->
+    <div class="border-t border-gray-200 p-5 space-y-3">
+        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Upfront Costs</h4>
+        <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Down Payment</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.down_payment) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Closing Costs (est.)</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.closing_costs) }}</span>
+            </div>
+            <div class="flex justify-between text-sm font-semibold border-t border-gray-100 pt-2">
+                <span>Total Upfront</span>
+                <span>${{ "{:,.0f}".format(result.total_upfront) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leftover -->
+    <div class="border-t border-gray-200 p-5 space-y-3">
+        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Monthly Budget</h4>
+        <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Monthly Income</span>
+                <span class="font-medium">${{ "{:,.0f}".format(result.monthly_income) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Housing Costs</span>
+                <span class="font-medium text-red-500">-${{ "{:,.0f}".format(result.total_monthly) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Other Obligations</span>
+                <span class="font-medium text-red-500">-${{ "{:,.0f}".format(result.monthly_existing_obligations) }}</span>
+            </div>
+            <div class="flex justify-between text-sm font-semibold border-t border-gray-100 pt-2
+                        {% if result.leftover_per_month >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                <span>Leftover</span>
+                <span>${{ "{:,.0f}".format(result.leftover_per_month) }}/mo</span>
+            </div>
+        </div>
+    </div>
+</div>

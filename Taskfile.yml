@@ -1,0 +1,42 @@
+version: "3"
+
+tasks:
+  start:
+    desc: Start the app and open in browser
+    cmds:
+      - docker compose up --build -d
+      - |
+        if [ "{{.CLI_ARGS}}" = "debug" ]; then
+          open http://localhost:8000
+          docker compose logs -f web
+        else
+          echo "Waiting for app to be ready..."
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+              echo "App is ready!"
+              open http://localhost:8000
+              break
+            fi
+            sleep 1
+          done
+        fi
+
+  stop:
+    desc: Stop the app
+    cmds:
+      - docker compose down
+
+  logs:
+    desc: Tail logs
+    cmds:
+      - docker compose logs -f web
+
+  test:
+    desc: Run tests with coverage
+    cmds:
+      - docker compose run --rm web pytest tests/ -v --cov=app --cov-report=term-missing
+
+  lint:
+    desc: Run linter
+    cmds:
+      - docker compose run --rm web ruff check app/ tests/

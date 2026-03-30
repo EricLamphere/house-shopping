@@ -1,0 +1,29 @@
+<!-- Add House Modal -->
+<div id="add-house-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 p-6" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800">Add a House</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <form id="add-house-form"
+              hx-post="/houses"
+              hx-target="#add-form-body"
+              hx-swap="innerHTML">
+            <div id="add-form-body">
+                {% set zillow_url_value = "" %}
+                {% set address_value = "" %}
+                {% set price_value = "" %}
+                {% set sqft_value = "" %}
+                {% set beds_value = "" %}
+                {% set baths_value = "" %}
+                {% set image_url_value = "" %}
+                {% include "partials/add_house_form_body.html" %}
+            </div>
+        </form>
+    </div>
+</div>
