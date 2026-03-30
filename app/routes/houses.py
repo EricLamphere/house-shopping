@@ -105,6 +105,13 @@ async def edit_house_form(house_id: str, request: Request):
             "image_url_value": d.image_url or "",
             "zillow_url_value": house.zillow_url,
             "notes_value": house.notes,
+            "annual_property_tax_value": str(house.annual_property_tax) if house.annual_property_tax is not None else "",
+            "annual_insurance_value": str(house.annual_insurance) if house.annual_insurance is not None else "",
+            "monthly_pmi_override_value": str(house.monthly_pmi_override) if house.monthly_pmi_override is not None else "",
+            "monthly_heat_value": str(house.monthly_heat) if house.monthly_heat is not None else "",
+            "monthly_water_value": str(house.monthly_water) if house.monthly_water is not None else "",
+            "monthly_electric_value": str(house.monthly_electric) if house.monthly_electric is not None else "",
+            "monthly_internet_value": str(house.monthly_internet) if house.monthly_internet is not None else "",
         },
     )
 
@@ -120,6 +127,13 @@ async def update_house(
     sqft: str = Form(default=""),
     image_url: str = Form(default=""),
     notes: str = Form(default=""),
+    annual_property_tax: str = Form(default=""),
+    annual_insurance: str = Form(default=""),
+    monthly_pmi_override: str = Form(default=""),
+    monthly_heat: str = Form(default=""),
+    monthly_water: str = Form(default=""),
+    monthly_electric: str = Form(default=""),
+    monthly_internet: str = Form(default=""),
 ):
     store = HouseStore(app.config.MEMORY_DIR)
 
@@ -140,6 +154,13 @@ async def update_house(
         "zillow_url": zillow_url.strip(),
         "zillow_data": new_zillow_data,
         "notes": notes,
+        "annual_property_tax": _int(annual_property_tax),
+        "annual_insurance": _int(annual_insurance),
+        "monthly_pmi_override": _int(monthly_pmi_override),
+        "monthly_heat": _int(monthly_heat),
+        "monthly_water": _int(monthly_water),
+        "monthly_electric": _int(monthly_electric),
+        "monthly_internet": _int(monthly_internet),
         "updated_at": datetime.now(timezone.utc),
     })
 

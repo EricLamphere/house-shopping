@@ -10,12 +10,14 @@ class CostEstimateInput(BaseModel):
     loan_term_years: int
     annual_property_tax: float
     annual_insurance: float
+    monthly_pmi_override: Optional[float] = None
     monthly_hoa: float = 0.0
     monthly_heat: float = 0.0
     monthly_water: float = 0.0
     monthly_electric: float = 0.0
     monthly_internet: float = 0.0
     annual_salary: float = 0.0
+    monthly_take_home: Optional[float] = None
     monthly_loan_payments: float = 0.0
     monthly_other_expenses: float = 0.0
     savings: float = 0.0

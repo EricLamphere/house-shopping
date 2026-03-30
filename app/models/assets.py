@@ -4,6 +4,7 @@ from typing import Optional
 
 class UserAssets(BaseModel):
     annual_salary: float = 0.0
+    monthly_take_home: Optional[float] = None
     savings: float = 0.0
     retirement_balance: float = 0.0
     monthly_loan_payments: float = 0.0
