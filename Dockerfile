@@ -16,7 +16,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN playwright install chromium
 
 COPY app/ app/
-COPY memory/assets.yml memory/assets.yml
 
 EXPOSE 8000
 

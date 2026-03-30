@@ -21,7 +21,7 @@ ENV/
 # Environment
 .env
 
-# App data (runtime-generated)
+# App data (runtime-generated, contains personal info)
 memory/houses.json
 memory/assets.yml
 
