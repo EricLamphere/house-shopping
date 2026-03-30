@@ -16,6 +16,7 @@ Create `memory/assets.yml` with your financial details:
 ```yaml
 # Income & savings
 annual_salary: 0
+monthly_take_home: 0        # actual take-home after taxes/deductions; overrides annual_salary for budget calculations
 savings: 0
 retirement_balance: 0
 

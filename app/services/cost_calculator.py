@@ -40,7 +40,11 @@ def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
     principal_and_interest = calculate_monthly_mortgage(
         loan_amount, inp.interest_rate, inp.loan_term_years
     )
-    pmi = calculate_pmi(loan_amount, inp.purchase_price)
+    pmi = (
+        inp.monthly_pmi_override
+        if inp.monthly_pmi_override is not None
+        else calculate_pmi(loan_amount, inp.purchase_price)
+    )
     property_tax = inp.annual_property_tax / 12
     insurance = inp.annual_insurance / 12
     utilities = (
@@ -54,7 +58,11 @@ def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
         + pmi + inp.monthly_hoa + utilities
     )
 
-    monthly_income = inp.annual_salary / 12
+    monthly_income = (
+        inp.monthly_take_home
+        if inp.monthly_take_home is not None
+        else inp.annual_salary / 12
+    )
     monthly_obligations = inp.monthly_loan_payments + inp.monthly_other_expenses
     leftover = monthly_income - total_monthly - monthly_obligations
 

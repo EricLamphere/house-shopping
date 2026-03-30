@@ -31,19 +31,28 @@
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Annual Property Tax ($)</label>
-                            <input type="number" name="annual_property_tax" value=""
+                            <input type="number" name="annual_property_tax"
+                                   value="{{ house.annual_property_tax if house and house.annual_property_tax is not none else '' }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Annual Insurance ($)</label>
-                            <input type="number" name="annual_insurance" value=""
+                            <input type="number" name="annual_insurance"
+                                   value="{{ house.annual_insurance if house and house.annual_insurance is not none else 2500 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Monthly HOA ($)</label>
                             <input type="number" name="monthly_hoa" value="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Monthly PMI ($)</label>
+                            <input type="number" name="monthly_pmi_override"
+                                   value="{{ house.monthly_pmi_override if house and house.monthly_pmi_override is not none else '' }}"
+                                   placeholder="auto"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                     </div>
@@ -83,22 +92,26 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Heat ($)</label>
-                            <input type="number" name="monthly_heat" value="0"
+                            <input type="number" name="monthly_heat"
+                                   value="{{ house.monthly_heat if house and house.monthly_heat is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Water ($)</label>
-                            <input type="number" name="monthly_water" value="0"
+                            <input type="number" name="monthly_water"
+                                   value="{{ house.monthly_water if house and house.monthly_water is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Electric ($)</label>
-                            <input type="number" name="monthly_electric" value="0"
+                            <input type="number" name="monthly_electric"
+                                   value="{{ house.monthly_electric if house and house.monthly_electric is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Internet ($)</label>
-                            <input type="number" name="monthly_internet" value="0"
+                            <input type="number" name="monthly_internet"
+                                   value="{{ house.monthly_internet if house and house.monthly_internet is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                     </div>
@@ -109,7 +122,14 @@
                     <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Your Finances</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm text-gray-600 mb-1">Annual Salary ($)</label>
+                            <label class="block text-sm text-gray-600 mb-1">Monthly Take-Home ($)</label>
+                            <input type="number" name="monthly_take_home"
+                                   value="{{ assets.monthly_take_home if assets.monthly_take_home is not none else '' }}"
+                                   placeholder="overrides salary below"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Annual Salary ($) <span class="text-gray-400">— fallback</span></label>
                             <input type="number" name="annual_salary" value="{{ assets.annual_salary }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
