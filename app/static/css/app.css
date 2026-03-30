@@ -1,0 +1,60 @@
+/* Custom styles beyond Tailwind */
+
+.house-tile {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.house-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-drag {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-star {
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.favorite-star:hover {
+    color: #f59e0b;
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline-block;
+}
+
+.htmx-request.htmx-indicator {
+    display: inline-block;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+/* Loading spinner */
+.spinner {
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

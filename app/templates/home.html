@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Favorites Section -->
+{% if favorites %}
+<section class="mb-10">
+    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 text-yellow-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+        </svg>
+        Favorites
+    </h2>
+    <p class="text-sm text-gray-500 mb-3">Drag to reorder</p>
+    <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for house in favorites %}
+            {% include "partials/house_tile.html" %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- All Houses Section -->
+<section>
+    <h2 class="text-xl font-bold text-gray-800 mb-4">All Houses</h2>
+    <div id="houses-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for house in houses %}
+            {% include "partials/house_tile.html" %}
+        {% endfor %}
+    </div>
+    {% if not houses %}
+    <div class="text-center py-16 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/>
+        </svg>
+        <p class="text-lg">No houses added yet</p>
+        <p class="mt-1">Click "Add House" to get started</p>
+    </div>
+    {% endif %}
+</section>
+
+{% include "partials/add_house_modal.html" %}
+
+<!-- Edit House Modal -->
+<div id="edit-house-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop"
+     onclick="if(event.target===this) closeEditModal()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 p-6" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800">Edit House</h3>
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div id="edit-form-container"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+<div class="house-tile bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative"
+     data-house-id="{{ house.id }}">
+    <!-- Image -->
+    <div class="relative aspect-[4/3] bg-gray-100">
+        {% if house.zillow_data.image_url %}
+        <img src="/proxy/image?url={{ house.zillow_data.image_url | urlencode }}"
+             alt="{{ house.zillow_data.address }}"
+             class="w-full h-full object-cover"
+             loading="lazy">
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center text-gray-300">
+            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/>
+            </svg>
+        </div>
+        {% endif %}
+
+        <!-- Favorite Star -->
+        <button class="favorite-star absolute top-2 left-2 p-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm
+                       {% if house.is_favorite %}text-yellow-500{% else %}text-gray-400{% endif %}"
+                hx-patch="/houses/{{ house.id }}/favorite"
+                hx-swap="none"
+                hx-on::after-request="window.location.reload()">
+            <svg class="w-5 h-5" fill="{% if house.is_favorite %}currentColor{% else %}none{% endif %}"
+                 stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+            </svg>
+        </button>
+
+        <!-- Delete Button -->
+        <button class="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm text-gray-400 hover:text-red-500 transition-colors"
+                hx-delete="/houses/{{ house.id }}"
+                hx-confirm="Remove this house?"
+                hx-swap="none"
+                hx-on::after-request="window.location.reload()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Details -->
+    <div class="p-3">
+        <p class="text-sm text-gray-600 truncate" title="{{ house.zillow_data.address }}">
+            {{ house.zillow_data.address }}
+        </p>
+        {% if house.zillow_data.price %}
+        <p class="text-lg font-bold text-gray-900 mt-0.5">
+            ${{ "{:,.0f}".format(house.zillow_data.price) }}
+        </p>
+        {% endif %}
+        {% if house.zillow_data.beds or house.zillow_data.baths or house.zillow_data.sqft %}
+        <div class="flex items-center space-x-3 text-xs text-gray-500 mt-1">
+            {% if house.zillow_data.beds %}
+            <span>{{ house.zillow_data.beds }} bd</span>
+            {% endif %}
+            {% if house.zillow_data.baths %}
+            <span>{{ house.zillow_data.baths }} ba</span>
+            {% endif %}
+            {% if house.zillow_data.sqft %}
+            <span>{{ "{:,.0f}".format(house.zillow_data.sqft) }} sqft</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if house.notes %}
+        <p class="text-xs text-gray-500 mt-2 line-clamp-2" title="{{ house.notes }}">{{ house.notes }}</p>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
+            <a href="{{ house.zillow_url }}" target="_blank" rel="noopener"
+               class="text-xs text-blue-600 hover:text-blue-800 transition-colors">
+                View on Zillow
+            </a>
+            <div class="flex items-center space-x-3">
+                <button onclick="openEditModal('{{ house.id }}')"
+                        class="text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    Edit
+                </button>
+                <a href="/cost-estimator/{{ house.id }}"
+                   class="text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    Estimate Costs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

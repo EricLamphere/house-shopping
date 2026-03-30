@@ -1,0 +1,70 @@
+{% if validation_error %}
+<div class="text-red-600 text-sm p-3 mb-4 bg-red-50 rounded-lg border border-red-200">
+    {{ validation_error }}
+</div>
+{% endif %}
+
+<div class="mb-4">
+    <label for="zillow_url" class="block text-sm font-medium text-gray-700 mb-1">Zillow URL <span class="text-gray-400 font-normal">(optional)</span></label>
+    <input type="text" id="zillow_url" name="zillow_url"
+           value="{{ zillow_url_value }}"
+           placeholder="https://www.zillow.com/homedetails/..."
+           oninput="extractAddressFromZillowUrl(this.value)"
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+    <p class="text-xs text-gray-400 mt-1">Paste a URL to auto-fill the address, then complete the remaining fields</p>
+</div>
+
+<div class="space-y-3 mb-4">
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Address <span class="text-red-400">*</span></label>
+        <input type="text" id="address-field" name="address" placeholder="123 Main St, City, State"
+               value="{{ address_value }}"
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" required>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+            <input type="number" name="price" placeholder="450000"
+                   value="{{ price_value }}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sqft</label>
+            <input type="number" name="sqft" placeholder="2000"
+                   value="{{ sqft_value }}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Beds</label>
+            <input type="number" name="beds" placeholder="3"
+                   value="{{ beds_value }}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Baths</label>
+            <input type="number" name="baths" placeholder="2" step="0.5"
+                   value="{{ baths_value }}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        </div>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Image URL <span class="text-gray-400 font-normal">(optional)</span></label>
+        <input type="text" name="image_url" placeholder="https://..."
+               value="{{ image_url_value }}"
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+    </div>
+</div>
+
+<!-- Submit -->
+<div class="flex items-center justify-end space-x-3">
+    <button type="button" onclick="closeModal()"
+            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+        Cancel
+    </button>
+    <button type="submit"
+            class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+        Add House
+    </button>
+</div>
