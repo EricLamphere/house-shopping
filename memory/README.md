@@ -7,6 +7,7 @@ Runtime data directory, mounted as a Docker volume. Contents are gitignored (exc
 | File | Description |
 |------|-------------|
 | `houses.json` | Saved house listings. Auto-created on first use. |
+| `links.json` | Saved links (resources, lenders, etc). Auto-created on first use. |
 | `assets.yml` | Your financial profile for cost estimates. Create this manually — see template below. |
 
 ## assets.yml
