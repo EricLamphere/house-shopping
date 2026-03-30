@@ -39,6 +39,20 @@ class ZillowData(BaseModel):
     image_url: Optional[str] = None
 ```
 
+## Link
+
+Defined in `app/models/link.py`. Represents a saved reference link.
+
+```python
+class Link(BaseModel):
+    id: str           # UUID, generated on creation
+    text: str         # Display text shown in the UI
+    url: str          # Full URL (validated as a URL by the browser input)
+    sort_order: int   # Zero-based position; controls display order
+```
+
+New links are appended with `sort_order = max(existing) + 1`. Drag-and-drop reorder updates all `sort_order` values by sending the full ordered ID list to `PUT /links/order`.
+
 ## UserAssets
 
 Defined in `app/models/assets.py`. The user's financial profile, used to pre-fill cost estimator fields.
@@ -109,5 +123,14 @@ class CostEstimateResult(BaseModel):
 ## Storage Format
 
 Houses are stored as a JSON array in `memory/houses.json`. Each element is the result of `house.model_dump(mode="json")`, which serializes datetimes as ISO 8601 strings.
+
+Links are stored as a JSON array in `memory/links.json`. Each element is a plain `Link` dict — no datetime fields. Example:
+
+```json
+[
+  {"id": "a1b2c3...", "text": "Mortgage Calculator", "url": "https://example.com", "sort_order": 0},
+  {"id": "d4e5f6...", "text": "School District Ratings", "url": "https://example.com", "sort_order": 1}
+]
+```
 
 UserAssets is stored as a YAML document in `memory/assets.yml`. See `memory/README.md` for the full template.

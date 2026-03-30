@@ -24,11 +24,12 @@ def create_app() -> FastAPI:
 
     MEMORY_DIR.mkdir(parents=True, exist_ok=True)
 
-    from app.routes import home, houses, cost_estimator, assets
+    from app.routes import home, houses, cost_estimator, assets, links
     app.include_router(home.router)
     app.include_router(houses.router)
     app.include_router(cost_estimator.router)
     app.include_router(assets.router)
+    app.include_router(links.router)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error_handler(request: Request, exc: RequestValidationError):
