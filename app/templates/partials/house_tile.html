@@ -69,6 +69,28 @@
         <p class="text-xs text-gray-500 mt-2 line-clamp-2" title="{{ house.notes }}">{{ house.notes }}</p>
         {% endif %}
 
+        <!-- Status -->
+        <div class="mt-2">
+            <form hx-patch="/houses/{{ house.id }}/status"
+                  hx-swap="none"
+                  hx-on::after-request="window.location.reload()">
+                <select name="status"
+                        onchange="this.form.requestSubmit()"
+                        class="w-full text-xs font-medium rounded-full px-2 py-1 border-0 cursor-pointer focus:ring-2 focus:ring-offset-1 focus:outline-none
+                        {% if house.status and house.status.value == 'love' %}bg-pink-300 text-pink-800 focus:ring-pink-500
+                        {% elif house.status and house.status.value == 'in_the_running' %}bg-blue-100 text-blue-700 focus:ring-blue-400
+                        {% elif house.status and house.status.value == 'no' %}bg-red-200 text-red-900 focus:ring-red-600
+                        {% elif house.status and house.status.value == 'offer_submitted' %}bg-green-100 text-green-700 focus:ring-green-400
+                        {% else %}bg-gray-100 text-gray-500 focus:ring-gray-400{% endif %}">
+                    <option value="" {% if not house.status %}selected{% endif %}>— Set status —</option>
+                    <option value="in_the_running" {% if house.status and house.status.value == 'in_the_running' %}selected{% endif %}>In the Running</option>
+                    <option value="love" {% if house.status and house.status.value == 'love' %}selected{% endif %}>Love</option>
+                    <option value="no" {% if house.status and house.status.value == 'no' %}selected{% endif %}>No</option>
+                    <option value="offer_submitted" {% if house.status and house.status.value == 'offer_submitted' %}selected{% endif %}>Offer Submitted</option>
+                </select>
+            </form>
+        </div>
+
         <!-- Actions -->
         <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
             <a href="{{ house.zillow_url }}" target="_blank" rel="noopener"

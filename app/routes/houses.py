@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 import app.config
-from app.models.house import House, ZillowData
+from app.models.house import House, HouseStatus, ZillowData
 from app.storage.house_store import HouseStore
 from app.services.zillow_scraper import extract_address_from_url
 
@@ -171,6 +171,20 @@ async def update_house(
 async def remove_house(house_id: str) -> Response:
     store = HouseStore(app.config.MEMORY_DIR)
     store.remove(house_id)
+    return Response(status_code=200)
+
+
+@router.patch("/{house_id}/status")
+async def update_status(
+    house_id: str,
+    status: str = Form(default=""),
+) -> Response:
+    store = HouseStore(app.config.MEMORY_DIR)
+    new_status = HouseStatus(status) if status else None
+    store.update(house_id, {
+        "status": new_status,
+        "updated_at": datetime.now(timezone.utc),
+    })
     return Response(status_code=200)
 
 

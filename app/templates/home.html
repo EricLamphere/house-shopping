@@ -21,22 +21,67 @@
 
 <!-- All Houses Section -->
 <section>
-    <h2 class="text-xl font-bold text-gray-800 mb-4">All Houses</h2>
-    <div id="houses-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {% for house in houses %}
-            {% include "partials/house_tile.html" %}
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-gray-800">All Houses</h2>
+        {% if houses %}
+        <button id="group-toggle"
+                onclick="toggleGrouped()"
+                class="flex items-center space-x-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 hover:border-blue-300">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 10h16M4 14h10M4 18h10"/>
+            </svg>
+            <span id="group-toggle-label">Group by Status</span>
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- Flat view -->
+    <div id="houses-flat">
+        <div id="houses-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {% for house in houses %}
+                {% include "partials/house_tile.html" %}
+            {% endfor %}
+        </div>
+        {% if not houses %}
+        <div class="text-center py-16 text-gray-400">
+            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/>
+            </svg>
+            <p class="text-lg">No houses added yet</p>
+            <p class="mt-1">Click "Add House" to get started</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Grouped view -->
+    <div id="houses-grouped" class="hidden space-y-8">
+        {% for group in grouped %}
+        <div>
+            <h3 class="text-base font-semibold mb-3 flex items-center space-x-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full
+                    {% if group.color == 'pink' %}bg-pink-400
+                    {% elif group.color == 'blue' %}bg-blue-500
+                    {% elif group.color == 'red' %}bg-red-700
+                    {% elif group.color == 'green' %}bg-green-400
+                    {% else %}bg-gray-400{% endif %}"></span>
+                <span class="text-gray-700">{{ group.label }}</span>
+                <span class="text-xs font-normal text-gray-400">({{ group.houses | length }})</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {% for house in group.houses %}
+                    {% include "partials/house_tile.html" %}
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
+        {% if not grouped %}
+        <div class="text-center py-16 text-gray-400">
+            <p class="text-lg">No houses added yet</p>
+        </div>
+        {% endif %}
     </div>
-    {% if not houses %}
-    <div class="text-center py-16 text-gray-400">
-        <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/>
-        </svg>
-        <p class="text-lg">No houses added yet</p>
-        <p class="mt-1">Click "Add House" to get started</p>
-    </div>
-    {% endif %}
 </section>
 
 {% include "partials/add_house_modal.html" %}
@@ -56,4 +101,22 @@
         <div id="edit-form-container"></div>
     </div>
 </div>
+
+<script>
+function toggleGrouped() {
+    const flat = document.getElementById('houses-flat');
+    const grouped = document.getElementById('houses-grouped');
+    const label = document.getElementById('group-toggle-label');
+    const isGrouped = !grouped.classList.contains('hidden');
+    if (isGrouped) {
+        grouped.classList.add('hidden');
+        flat.classList.remove('hidden');
+        label.textContent = 'Group by Status';
+    } else {
+        flat.classList.add('hidden');
+        grouped.classList.remove('hidden');
+        label.textContent = 'Show All';
+    }
+}
+</script>
 {% endblock %}
