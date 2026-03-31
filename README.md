@@ -20,7 +20,7 @@ task lint         # run ruff linter
 Or with live logs:
 
 ```bash
-task start -- --debug
+task start -- debug
 ```
 
 The app runs at **http://localhost:8000**.
