@@ -1,11 +1,13 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Literal, Optional
 
 
 class CostEstimateInput(BaseModel):
     house_id: Optional[str] = None
     purchase_price: int
-    down_payment_percent: float
+    down_payment_percent: Optional[float] = None
+    down_payment_dollars: Optional[float] = None
+    down_payment_mode: Literal["percent", "dollars"] = "percent"
     interest_rate: float
     loan_term_years: int
     annual_property_tax: float
@@ -31,9 +33,15 @@ class CostEstimateResult(BaseModel):
     hoa: float
     utilities: float
     total_monthly: float
+    total_monthly_without_utilities: float
     monthly_income: float
     monthly_existing_obligations: float
+    disposable_income: float
     leftover_per_month: float
     down_payment: float
     closing_costs: float
     total_upfront: float
+    pct_of_disposable_income: Optional[float]
+    pct_of_disposable_income_with_utilities: Optional[float]
+    pct_of_salary: Optional[float]
+    pct_of_salary_with_utilities: Optional[float]

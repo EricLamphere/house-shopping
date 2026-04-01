@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Form, Request
-from typing import Optional
+from typing import Literal, Optional
 
 import app.config
 from app.models.cost_estimate import CostEstimateInput
@@ -52,7 +52,9 @@ async def calculate(
     request: Request,
     house_id: Optional[str] = Form(default=None),
     purchase_price: int = Form(...),
-    down_payment_percent: float = Form(...),
+    down_payment_mode: Literal["percent", "dollars"] = Form(default="percent"),
+    down_payment_percent: Optional[float] = Form(default=None),
+    down_payment_dollars: Optional[float] = Form(default=None),
     interest_rate: float = Form(...),
     loan_term_years: int = Form(...),
     annual_property_tax: float = Form(...),
@@ -74,7 +76,9 @@ async def calculate(
     estimate_input = CostEstimateInput(
         house_id=house_id,
         purchase_price=purchase_price,
+        down_payment_mode=down_payment_mode,
         down_payment_percent=down_payment_percent,
+        down_payment_dollars=down_payment_dollars,
         interest_rate=interest_rate,
         loan_term_years=loan_term_years,
         annual_property_tax=annual_property_tax,
