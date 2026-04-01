@@ -4,7 +4,9 @@
       "WebSearch",
       "Bash(pip3 install:*)",
       "Bash(source .venv/bin/activate)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "Bash(obsidian search:*)",
+      "Bash(obsidian read:*)"
     ]
   }
 }

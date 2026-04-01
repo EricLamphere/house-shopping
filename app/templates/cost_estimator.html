@@ -3,7 +3,7 @@
 {% block title %}Cost Estimator - House Shopping{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto">
+<div class="max-w-7xl mx-auto">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Cost Estimator</h1>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -25,32 +25,32 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Purchase Price ($)</label>
-                            <input type="number" name="purchase_price" value="{{ house.zillow_data.price if house and house.zillow_data.price else '' }}"
+                            <input type="number" name="purchase_price" step="any" value="{{ house.zillow_data.price if house and house.zillow_data.price else '' }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Annual Property Tax ($)</label>
-                            <input type="number" name="annual_property_tax"
+                            <input type="number" name="annual_property_tax" step="any"
                                    value="{{ house.annual_property_tax if house and house.annual_property_tax is not none else '' }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Annual Insurance ($)</label>
-                            <input type="number" name="annual_insurance"
+                            <input type="number" name="annual_insurance" step="any"
                                    value="{{ house.annual_insurance if house and house.annual_insurance is not none else 2500 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Monthly HOA ($)</label>
-                            <input type="number" name="monthly_hoa" value="0"
+                            <input type="number" name="monthly_hoa" step="any" value="0"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Monthly PMI ($)</label>
-                            <input type="number" name="monthly_pmi_override"
+                            <input type="number" name="monthly_pmi_override" step="any"
                                    value="{{ house.monthly_pmi_override if house and house.monthly_pmi_override is not none else '' }}"
                                    placeholder="auto"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
@@ -63,15 +63,26 @@
                     <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Loan</h3>
                     <div class="grid grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm text-gray-600 mb-1">Down Payment (%)</label>
-                            <input type="number" name="down_payment_percent" step="0.1"
+                            <div class="flex items-center justify-between mb-1">
+                                <label id="dp-label" class="text-sm text-gray-600">Down Payment ($)</label>
+                                <button type="button" id="dp-toggle"
+                                        onclick="toggleDownPaymentMode()"
+                                        class="text-xs text-blue-600 hover:text-blue-800 underline">
+                                    switch to %
+                                </button>
+                            </div>
+                            <input type="hidden" name="down_payment_mode" id="dp-mode" value="dollars">
+                            <input type="number" name="down_payment_percent" id="dp-percent" step="any" disabled
                                    value="{{ assets.down_payment_percent }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm hidden">
+                            <input type="number" name="down_payment_dollars" id="dp-dollars" step="any"
+                                   value="60000"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Interest Rate (%)</label>
-                            <input type="number" name="interest_rate" step="0.01"
+                            <input type="number" name="interest_rate" step="any"
                                    value="{{ assets.interest_rate }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                                    required>
@@ -92,25 +103,25 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Heat ($)</label>
-                            <input type="number" name="monthly_heat"
+                            <input type="number" name="monthly_heat" step="any"
                                    value="{{ house.monthly_heat if house and house.monthly_heat is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Water ($)</label>
-                            <input type="number" name="monthly_water"
+                            <input type="number" name="monthly_water" step="any"
                                    value="{{ house.monthly_water if house and house.monthly_water is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Electric ($)</label>
-                            <input type="number" name="monthly_electric"
+                            <input type="number" name="monthly_electric" step="any"
                                    value="{{ house.monthly_electric if house and house.monthly_electric is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Internet ($)</label>
-                            <input type="number" name="monthly_internet"
+                            <input type="number" name="monthly_internet" step="any"
                                    value="{{ house.monthly_internet if house and house.monthly_internet is not none else 0 }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
@@ -123,29 +134,29 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Monthly Take-Home ($)</label>
-                            <input type="number" name="monthly_take_home"
+                            <input type="number" name="monthly_take_home" step="any"
                                    value="{{ assets.monthly_take_home if assets.monthly_take_home is not none else '' }}"
                                    placeholder="overrides salary below"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Annual Salary ($) <span class="text-gray-400">— fallback</span></label>
-                            <input type="number" name="annual_salary" value="{{ assets.annual_salary }}"
+                            <input type="number" name="annual_salary" step="any" value="{{ assets.annual_salary }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Savings ($)</label>
-                            <input type="number" name="savings" value="{{ assets.savings }}"
+                            <input type="number" name="savings" step="any" value="{{ assets.savings }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Monthly Loan Payments ($)</label>
-                            <input type="number" name="monthly_loan_payments" value="{{ assets.monthly_loan_payments }}"
+                            <input type="number" name="monthly_loan_payments" step="any" value="{{ assets.monthly_loan_payments }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Other Monthly Expenses ($)</label>
-                            <input type="number" name="monthly_other_expenses" value="{{ assets.monthly_other_expenses }}"
+                            <input type="number" name="monthly_other_expenses" step="any" value="{{ assets.monthly_other_expenses }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
                     </div>
@@ -181,4 +192,36 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleDownPaymentMode() {
+    const modeInput = document.getElementById('dp-mode');
+    const percentInput = document.getElementById('dp-percent');
+    const dollarsInput = document.getElementById('dp-dollars');
+    const label = document.getElementById('dp-label');
+    const toggleBtn = document.getElementById('dp-toggle');
+
+    if (modeInput.value === 'percent') {
+        modeInput.value = 'dollars';
+        percentInput.classList.add('hidden');
+        percentInput.removeAttribute('required');
+        percentInput.setAttribute('disabled', '');
+        dollarsInput.classList.remove('hidden');
+        dollarsInput.removeAttribute('disabled');
+        dollarsInput.setAttribute('required', '');
+        label.textContent = 'Down Payment ($)';
+        toggleBtn.textContent = 'switch to %';
+    } else {
+        modeInput.value = 'percent';
+        dollarsInput.classList.add('hidden');
+        dollarsInput.removeAttribute('required');
+        dollarsInput.setAttribute('disabled', '');
+        percentInput.classList.remove('hidden');
+        percentInput.removeAttribute('disabled');
+        percentInput.setAttribute('required', '');
+        label.textContent = 'Down Payment (%)';
+        toggleBtn.textContent = 'switch to $';
+    }
+}
+</script>
 {% endblock %}

@@ -89,7 +89,7 @@
 <!-- Edit House Modal -->
 <div id="edit-house-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop"
      onclick="if(event.target===this) closeEditModal()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 p-6" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-bold text-gray-800">Edit House</h3>
             <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition-colors">

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.models.cost_estimate import CostEstimateInput, CostEstimateResult
 
 
@@ -34,7 +36,11 @@ def calculate_closing_costs(purchase_price: float, rate: float = 0.025) -> float
 
 def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
     """Compute all cost components and return a complete result."""
-    down_payment = inp.purchase_price * (inp.down_payment_percent / 100)
+    if inp.down_payment_mode == "dollars" and inp.down_payment_dollars is not None:
+        down_payment = inp.down_payment_dollars
+    else:
+        pct = inp.down_payment_percent or 0.0
+        down_payment = inp.purchase_price * (pct / 100)
     loan_amount = inp.purchase_price - down_payment
 
     principal_and_interest = calculate_monthly_mortgage(
@@ -53,10 +59,11 @@ def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
     )
     closing_costs = calculate_closing_costs(inp.purchase_price)
 
-    total_monthly = (
+    total_monthly_without_utilities = (
         principal_and_interest + property_tax + insurance
-        + pmi + inp.monthly_hoa + utilities
+        + pmi + inp.monthly_hoa
     )
+    total_monthly = total_monthly_without_utilities + utilities
 
     monthly_income = (
         inp.monthly_take_home
@@ -64,7 +71,15 @@ def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
         else inp.annual_salary / 12
     )
     monthly_obligations = inp.monthly_loan_payments + inp.monthly_other_expenses
-    leftover = monthly_income - total_monthly - monthly_obligations
+    disposable_income = monthly_income - monthly_obligations
+    leftover = disposable_income - total_monthly
+
+    annual_salary = inp.annual_salary or 0.0
+
+    def _pct(numerator: float, denominator: float) -> Optional[float]:
+        if denominator <= 0:
+            return None
+        return round(numerator / denominator * 100, 2)
 
     return CostEstimateResult(
         principal_and_interest=round(principal_and_interest, 2),
@@ -74,10 +89,16 @@ def calculate_full_estimate(inp: CostEstimateInput) -> CostEstimateResult:
         hoa=round(inp.monthly_hoa, 2),
         utilities=round(utilities, 2),
         total_monthly=round(total_monthly, 2),
+        total_monthly_without_utilities=round(total_monthly_without_utilities, 2),
         monthly_income=round(monthly_income, 2),
         monthly_existing_obligations=round(monthly_obligations, 2),
+        disposable_income=round(disposable_income, 2),
         leftover_per_month=round(leftover, 2),
         down_payment=round(down_payment, 2),
         closing_costs=round(closing_costs, 2),
         total_upfront=round(down_payment + closing_costs, 2),
+        pct_of_disposable_income=_pct(total_monthly_without_utilities, monthly_income),
+        pct_of_disposable_income_with_utilities=_pct(total_monthly, monthly_income),
+        pct_of_salary=_pct(total_monthly_without_utilities, annual_salary / 12),
+        pct_of_salary_with_utilities=_pct(total_monthly, annual_salary / 12),
     )
